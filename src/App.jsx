@@ -1,28 +1,53 @@
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import ModalContainer from './components/ModalContainer';
+import LeftPanel from './components/LeftPanel';
+import RightPanel from './components/RightPanel';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [open, setOpen] = useState(true);
+
+  // Prevent background scroll when modal is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+
+  const handleEnroll = () => {
+    // Navigate users to enrollment sub-website (replace with actual URL as needed)
+    window.open('https://www.vlslawacademy.com', '_blank');
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
+    <div className="min-h-screen bg-gray-50">
+      {/* Background page content (dimmed by overlay when modal open) */}
+      <header className="mx-auto max-w-5xl px-6 py-10">
+        <h1 className="text-2xl font-semibold text-gray-900">VLS Law Academy</h1>
+        <p className="mt-1 text-gray-600">Premium AIBE preparation crafted for success.</p>
+        <div className="mt-6">
           <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+            onClick={() => setOpen(true)}
+            className="rounded-lg px-4 py-2 text-white"
+            style={{ backgroundColor: '#8B0000' }}
           >
-            Count is {count}
+            Open Enrollment Popup
           </button>
         </div>
-      </div>
+      </header>
+
+      <ModalContainer open={open} onClose={() => setOpen(false)}>
+        <div className="flex flex-col md:flex-row">
+          <LeftPanel />
+          <RightPanel onPrimaryClick={handleEnroll} />
+        </div>
+      </ModalContainer>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
